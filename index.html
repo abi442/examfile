@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab Exam Supervisor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/monaco-editor@0.45.0/min/vs/loader.js"></script>
+</head>
+<body>
+    
+
+    <div id="overlay">
+        <div class="warn-box">
+            <h1>Security Violation</h1>
+            <p>You switched windows or tabs.</p>
+            <p id="warnCountDisplay">Warnings: 0</p>
+            <button onclick="resumeExam()">Resume Exam</button>
+        </div>
+    </div>
+
+ 
+    
+    <div id="loginScreen" class="screen active">
+        <center>
+        <h1 class="text-3xl font-bold text-center mt-4"> Smart Practical Examination Monitoring Platform </h1>
+    </center>
+
+        <div class="login-bg">
+            <div class="login-card">
+                <h2>Student Login</h2>
+                <input type="text" id="sName" class="input-field" placeholder="Name">
+                <input type="text" id="sReg" class="input-field" placeholder="Register No">
+                <div class="status-row">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">Initializing...</span>
+                </div>
+                <button id="studentLoginBtn" class="btn-primary" onclick="attemptLogin()" disabled>Loading...</button>
+                <div class="role-switch" onclick="showExaminerLogin()">Examiner Login ?</div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="examinerLoginScreen" class="screen">
+        <div class="login-bg">
+            <div class="login-card">
+                <h2>Examiner Login</h2>
+                <input type="text" id="eName" class="input-field" placeholder="Examiner ID">
+                <input type="password" id="ePass" class="input-field" placeholder="Password">
+                <button class="btn-primary" onclick="examinerLogin()">Login</button>
+                <div class="role-switch" onclick="showStudentLogin()">Student Login ?</div>
+            </div>
+        </div>
+    </div>
+
+   
+    <div id="examinerDashboard" class="screen">
+        <div class="header-bar">
+            <h3 class="header-title">Examiner Monitor Panel</h3>
+            <button onclick="logout()" class="btn-danger">Logout</button>
+        </div>
+        <div class="dashboard-container">
+            <div class="dash-header">
+                <h3>Live Student Activity</h3>
+                <button onclick="clearAllData()" class="btn-secondary">Clear All Records</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Name</th><th>Reg No</th><th>Entry Time</th><th>Exit Time</th><th>Status</th><th>Warnings</th></tr>
+                </thead>
+                <tbody id="monitorTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+   
+    <div id="examScreen" class="screen">
+        <div class="header-bar">
+            <div class="student-info"><span id="displaySName">Student</span> | <span id="displaySReg">Reg</span></div>
+            <div class="header-right">
+                <span class="timer" id="timer">60:00</span>
+                <div id="statusBadge" class="status-badge status-active">● Monitoring Active</div>
+              <button onclick="studentLogout()">Finish Exam</button>
+            </div>
+        </div>
+
+        <div class="menu-bar" id="mainMenuBar">
+            <div class="menu-item">File
+                <div class="menu-dropdown">
+                    <div class="menu-option" onclick="menuCmd(newFile)">New File</div>
+                    <div class="menu-option" onclick="menuCmd(openFileClick)">Open File</div>
+                    <div class="menu-option" onclick="menuCmd(saveFile)">Save</div>
+                </div>
+            </div>
+            <div class="menu-item">Edit
+                <div class="menu-dropdown">
+                    <div class="menu-option" onclick="menuCmd(editUndo)">Undo</div>
+                    <div class="menu-option" onclick="menuCmd(editRedo)">Redo</div>
+                </div>
+            </div>
+            <div class="menu-item">View
+                <div class="menu-dropdown">
+                    <div class="menu-option" onclick="menuCmd(zoomIn)">Zoom In</div>
+                    <div class="menu-option" onclick="menuCmd(zoomOut)">Zoom Out</div>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <select id="langSelect" onchange="switchMode()">
+                    <option value="python">Python</option>
+                    <option value="web">Web (HTML/CSS/JS)</option>
+                </select>
+                <button id="runBtn" class="btn-run" onclick="runCode()">▶ Run</button>
+            </div>
+        </div>
+
+        <div class="exam-container" id="examContainer">
+            <div class="editor-area"><div id="editorContainer"></div></div>
+            <div class="output-panel" id="outputPanel">
+                <div class="output-header"><span>Output Console</span><button class="close-btn" onclick="clearOutput()">×</button></div>
+                <div id="output" class="output-content">Ready...</div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileOpener" style="display:none" onchange="readSingleFile(this)">
+    <script src="script.js"></script>
+    <script src="server.js"></script>
+    <script src="db.js"></script>
+    <script src="test.js"></script>
+</body>
+</html>
